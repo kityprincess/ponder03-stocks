@@ -68,9 +68,6 @@ public:
    // gets the value from the back
    T & back() const throw (const char *);
 
-   // resize the capacity of queue
-   void resize() throw (const char *);
-
 private:
 
    int m_capacity;                     // capacity of queue
@@ -78,16 +75,6 @@ private:
    int m_front;                        // front of queue
    int m_back;                         // back of queue
    void resize() throw (const char *); // resize the stack
-
-   class Transaction
-   {
-
-   };
-
-   class Portfolio
-   {
-
-   };
 };
 
 /***********************************************************************
@@ -199,6 +186,57 @@ T & Queue <T> :: back() const throw (const char *)
    {
       throw "ERROR: attempting to access an item in an empty queue";
    }
+}
+
+/**********************************************************
+* QUEUE :: POP
+* Pulls off an item from the front
+*********************************************************/
+template <class T>
+void Queue <T> ::pop() throw (const char*)
+{
+   // if queue is not empty, pop off first element
+   if (!empty())
+      m_front = (m_front + 1) % m_capacity;
+   else
+      throw "ERROR: attempting to pop from an empty queue";
+}
+
+/**********************************************************
+* QUEUE :: RESIZE
+* Resizes the Queue
+*********************************************************/
+template <class T>
+void Queue <T> ::resize() throw (const char *)
+{
+   // Lets make sure we have an array and if we do not
+   // have an array, lets create one
+   if (!m_capacity)
+   {
+      m_data = new (std::nothrow) T[1];
+
+      if (NULL == m_data)
+         throw "ERROR: Unable to allocate a new buffer for Queue";
+
+      m_capacity = 1;
+      return;
+   }
+
+   // From here we have a full Queue and we will size it accordingly
+   T * new_data = new (std::nothrow) T[m_capacity];
+   if (new_data != NULL)
+
+      throw "ERROR: Unable to allocate a new buffer for Queue";
+   m_capacity *= 2;
+
+   // Then, we copy over our existing data
+   for (int i = 0; i <= m_back; i++)
+      new_data[i] = m_data[i];
+
+   // Delete our old buffer and swap in the new one
+   delete[] m_data;
+   m_data = new_data;
+
 }
 
 #endif /* Queue_h */
