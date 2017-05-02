@@ -32,10 +32,10 @@ class Queue
 public:
 
    // Default constructor and non-default constructor
-   Queue(int in_capacity = 0) throw (const char *)
+   Queue(int in_capacity = 0) throw (const char *);
 
-      // copy constructor
-      Queue(const Queue<T> & source) throw (const char *);
+   // copy constructor
+   Queue(const Queue<T> & source) throw (const char *);
 
    // destructor
    ~Queue() {
@@ -47,16 +47,16 @@ public:
    Queue<T> & operator = (const Queue<T> & rhs) throw (const char *);
 
    // check and see if empty
-   bool empty() const { return m_front == m_back };
+   bool empty() const { return m_front == m_back; }
 
    // returns the size
-   int size() const { return m_back - m_front };
+   int size() const { return m_back - m_front; }
 
    // gives us the capacity
-   int capacity() const { return m_capacity };
+   int capacity() const { return m_capacity; }
 
    // will clear the board
-   void clear() { m_front = 0 };
+   void clear() { m_front = 0; }
 
    // add a value to the top
    void push(const T & value) throw (const char *);
@@ -182,12 +182,12 @@ Queue<T> & Queue<T> :: operator =
 template <class T>
 void Queue <T> :: push(const T & value) throw (const char *)
 {
-   if (m_top == m_capacity - 1)
+   if (m_back == m_capacity - 1)
    {
       resize();
    }
 
-   if (m_top < m_capacity - 1)
+   if (m_back < m_capacity - 1)
    {
       ++m_back;
       m_data[m_back] = value;
