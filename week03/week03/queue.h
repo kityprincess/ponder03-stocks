@@ -56,7 +56,7 @@ public:
    int capacity() const { return m_capacity; }
 
    // will clear the board
-   void clear() { m_front = 0; }
+   void clear() { m_front = m_back; }
 
    // add a value to the top
    void push(const T & value) throw (const char *);
@@ -101,7 +101,7 @@ Queue<T> :: Queue(int in_capacity) throw (const char *)
    // If we've reached this point, we have an input capacity > 0
    // so we'll try allocating our array. We add an additional 
    // buffer in order to keep an empty buffer to track the end of the array
-   m_capacity = in_capacity + 1;
+   m_capacity = in_capacity;
    m_data = new (std::nothrow) T[m_capacity];
 
    // Check to see if we failed to allocate, and if so, throw
