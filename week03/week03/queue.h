@@ -99,8 +99,7 @@ Queue<T> :: Queue(int in_capacity) throw (const char *)
       return;
 
    // If we've reached this point, we have an input capacity > 0
-   // so we'll try allocating our array. We add an additional 
-   // buffer in order to keep an empty buffer to track the end of the array
+   // so we'll try allocating our array.
    m_capacity = in_capacity;
    m_data = new (std::nothrow) T[m_capacity];
 
