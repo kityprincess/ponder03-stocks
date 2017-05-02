@@ -70,6 +70,9 @@ public:
    // gets the value from the back
    T & back() const throw (const char *);
 
+   // displays the contents of the queue to an ostream
+   void display(std::ostream & out) const;
+
 private:
 
    int m_capacity;                     // capacity of queue
@@ -96,8 +99,9 @@ Queue<T> :: Queue(int in_capacity) throw (const char *)
       return;
 
    // If we've reached this point, we have an input capacity > 0
-   // so we'll try allocating our array
-   m_capacity = in_capacity;
+   // so we'll try allocating our array. We add an additional 
+   // buffer in order to keep an empty buffer to track the end of the array
+   m_capacity = in_capacity + 1;
    m_data = new (std::nothrow) T[m_capacity];
 
    // Check to see if we failed to allocate, and if so, throw
@@ -121,6 +125,10 @@ Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
    // If we failed, we throw an error
    if (NULL == m_data)
       throw "ERROR: Unable to allocate a new buffer for Queue";
+
+   // If the source is empty, we shouldn't try to copy anything
+   if (source.empty())
+      return;
 
    // If we reach this point, we've successfully allocated
    // our buffer, so let's copy the data
@@ -182,20 +190,24 @@ Queue<T> & Queue<T> :: operator =
 template <class T>
 void Queue <T> :: push(const T & value) throw (const char *)
 {
-   if (m_back == m_capacity - 1)
+   // We need to handle the case where we haven't even
+   // created our queue, yet.
+   if (!m_capacity)
+      resize();
+
+   // Now comes the work
+   int new_back = (m_back + 1) % m_capacity;
+
+   if (new_back == m_front) // We're full up, so we need to resize
    {
       resize();
-   }
-
-   if (m_back < m_capacity - 1)
-   {
-      ++m_back;
       m_data[m_back] = value;
+      m_back = (m_back + 1) % m_capacity;
    }
-
    else
    {
-      throw "ERROR: Unable to allocate a new buffer for queue";
+      m_data[m_back] = value;
+      m_back = new_back;
    }
 }
 /****************************************************************
@@ -249,33 +261,65 @@ template <class T>
 void Queue <T> ::resize() throw (const char *)
 {
    // Lets make sure we have an array and if we do not
-   // have an array, lets create one
+   // have an array, lets create one. We need to have
+   // at least two slots, so we can keep track of our 
+   // empty slot.
    if (!m_capacity)
    {
-      m_data = new (std::nothrow) T[1];
+      m_data = new (std::nothrow) T[2];
 
       if (NULL == m_data)
          throw "ERROR: Unable to allocate a new buffer for Queue";
 
-      m_capacity = 1;
+      m_capacity = 2;
       return;
    }
 
    // From here we have a full Queue and we will size it accordingly
-   T * new_data = new (std::nothrow) T[m_capacity];
-   if (new_data != NULL)
-
+   T * new_data = new (std::nothrow) T[m_capacity * 2];
+   if (new_data == NULL)
       throw "ERROR: Unable to allocate a new buffer for Queue";
-   m_capacity *= 2;
 
-   // Then, we copy over our existing data
-   for (int i = 0; i <= m_back; i++)
-      new_data[i] = m_data[i];
+   // Then, we copy over our existing data - this is a bit of 
+   // a bugbear because of the circular nature of the source
+   // array.
+   int i = 0;
+   int cur = (m_front + i) % m_capacity;
+
+   while (cur != m_back)
+   {
+      new_data[i] = m_data[cur];
+      i++;
+      cur = (m_front + i) % m_capacity;
+   }
+
+   m_capacity *= 2;
+   m_front = 0;
+   m_back = m_front + i;
 
    // Delete our old buffer and swap in the new one
    delete[] m_data;
    m_data = new_data;
 
+}
+
+template <class T>
+void Queue <T> :: display(std::ostream & out) const
+{
+   if (empty())
+   {
+      out << "{ }";
+      return;
+   }
+
+   out << "{ ";
+   for (int i = m_front; i <= m_back; i++)
+   {
+      out << m_data[i] << " ";
+   }
+   out << "}";
+
+   return;
 }
 
 #endif /* Queue_h */
