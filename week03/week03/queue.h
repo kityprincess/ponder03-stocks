@@ -34,27 +34,29 @@ public:
    // Default constructor and non-default constructor
    Queue(int in_capacity = 0) throw (const char *)
 
-   // copy constructor
-   Queue(const Queue<T> & source) throw (const char *);
+      // copy constructor
+      Queue(const Queue<T> & source) throw (const char *);
 
    // destructor
-   ~Queue() { if (m_capacity > 0) // If this is true, we have an allocated buffer
-            delete[] m_data; }
+   ~Queue() {
+      if (m_capacity > 0) // If this is true, we have an allocated buffer
+         delete[] m_data;
+   }
 
    // assignment operator
    Queue<T> & operator = (const Queue<T> & rhs) throw (const char *);
 
    // check and see if empty
-   bool empty() const;
+   bool empty() const { return m_front == m_back };
 
    // returns the size
-   int size() const;
+   int size() const { return m_back - m_front };
 
    // gives us the capacity
-   int capacity() const;
+   int capacity() const { return m_capacity };
 
    // will clear the board
-   void clear();
+   void clear() { m_front = 0 };
 
    // add a value to the top
    void push(const T & value) throw (const char *);
@@ -63,7 +65,7 @@ public:
    void pop() throw (const char*);
 
    // gets the value from the front
-   T & front() const;
+   T & front() const throw (const char*);
 
    // gets the value from the back
    T & back() const throw (const char *);
@@ -173,6 +175,43 @@ Queue<T> & Queue<T> :: operator =
    return *this;
 }
 
+/****************************************************************
+* QUEUE :: PUSH
+* Adds  a value to the back of the queue
+****************************************************************/
+template <class T>
+void Queue <T> :: push(const T & value) throw (const char *)
+{
+   if (m_top == m_capacity - 1)
+   {
+      resize();
+   }
+
+   if (m_top < m_capacity - 1)
+   {
+      ++m_back;
+      m_data[m_back] = value;
+   }
+
+   else
+   {
+      throw "ERROR: Unable to allocate a new buffer for queue";
+   }
+}
+/****************************************************************
+* QUEUE :: FRONT
+* Will check what value is at the front of the queue
+****************************************************************/
+template <class T>
+T & Queue <T> :: front() const throw (const char*)
+{
+   if (!empty())
+      return (m_data[m_front]);
+   else
+   {
+      throw "ERROR: attempting to access an item in an empty queue";
+   }
+}
 /****************************************************************
 * QUEUE :: BACK
 * Will check what value is at the back of the queue
