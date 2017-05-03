@@ -134,7 +134,7 @@ Queue<T> ::Queue(const Queue<T> & source) throw (const char *)
    // If we reach this point, we've successfully allocated
    // our buffer, so let's copy the data
    for (int i = source.m_numPop; i < source.m_numPush; i++)
-      push(source.m_data[i % source.m_capacity]);
+      m_data[i % m_capacity] = source.m_data[i % source.m_capacity];
 }
 
 /**********************************************************************
@@ -276,26 +276,8 @@ void Queue <T> ::resize() throw (const char *)
    for (int i = old_numPop; i < old_numPush; i++)
       push(old_data[i % old_m_capacity]);
 
+
    delete[] old_data;
-}
-
-template <class T>
-void Queue <T> ::display(std::ostream & out) const
-{
-   if (empty())
-   {
-      out << "{ }";
-      return;
-   }
-
-   out << "{ ";
-   for (int i = m_front; i <= m_back; i++)
-   {
-      out << m_data[i] << " ";
-   }
-   out << "}";
-
-   return;
 }
 
 #endif /* Queue_h */
