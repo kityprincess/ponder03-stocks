@@ -1,4 +1,4 @@
-//
+﻿//
 //  queue.h
 //  queue
 //
@@ -47,16 +47,16 @@ public:
    Queue<T> & operator = (const Queue<T> & rhs) throw (const char *);
 
    // check and see if empty
-   bool empty() const { return m_front == m_back; }
+   bool empty() const { return m_numPush == m_numPop; }
 
    // returns the size
-   int size() const { return m_back - m_front; }
+   int size() const { return m_numPush - m_numPop; }
 
    // gives us the capacity
    int capacity() const { return m_capacity; }
 
    // will clear the board
-   void clear() { m_front = m_back; }
+   void clear() { m_numPush = m_numPop; }
 
    // add a value to the top
    void push(const T & value) throw (const char *);
@@ -67,19 +67,21 @@ public:
    // gets the value from the front
    T & front() const throw (const char*);
 
-   // gets the value from the back
-   T & back() const throw (const char *);
+   // gets the value from the front
+   T & back() const throw (const char*);
 
    // displays the contents of the queue to an ostream
    void display(std::ostream & out) const;
 
 private:
 
-   int m_capacity;                     // capacity of queue
-   T * m_data;                         // array to store element
-   int m_front;                        // front of queue
-   int m_back;                         // back of queue
-   void resize() throw (const char *); // resize the stack
+   int m_capacity;                                       // capacity of queue
+   T * m_data;                                           // array to store element
+   int m_numPop;                                           // number of times a value has been popped
+   int m_numPush;                                          // number of times a value has been pushed
+   void resize() throw (const char *);                   // resize the stack
+   int iTail() const { return (m_numPush - 1) % m_capacity; }  // returns the back of the queue
+   int iHead() const { return m_numPop % m_capacity; }         // returns the front of the queue
 };
 
 /***********************************************************************
@@ -88,8 +90,8 @@ private:
 * we create a Queue with enough storage to hold that capacity
 ************************************************************************/
 template <class T>
-Queue<T> :: Queue(int in_capacity) throw (const char *)
-   : m_capacity(0), m_front(0), m_back(0), m_data(NULL)
+Queue<T> ::Queue(int in_capacity) throw (const char *)
+   : m_capacity(0), m_numPush(0), m_numPop(0), m_data(NULL)
 {
    assert(in_capacity >= 0);
    // First, assure the user specified a valid capacity; if capacity
@@ -114,8 +116,8 @@ Queue<T> :: Queue(int in_capacity) throw (const char *)
 * Creates a new Queue by copying the contents of another
 **********************************************************************/
 template <class T>
-Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
-   : m_capacity(source.m_capacity), m_front(source.m_front), m_back(source.m_back)
+Queue<T> ::Queue(const Queue<T> & source) throw (const char *)
+   : m_capacity(source.m_capacity), m_numPush(source.m_numPush), m_numPop(source.m_numPop)
 {
 
    // Now we try to allocate our array
@@ -131,9 +133,8 @@ Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
 
    // If we reach this point, we've successfully allocated
    // our buffer, so let's copy the data
-   for (int i = m_front; i <= m_back; i++)
-      m_data[i] = source.m_data[i];
-
+   for (int i = source.m_numPop; i < source.m_numPush; i++)
+      push(source.m_data[i % source.m_capacity]);
 }
 
 /**********************************************************************
@@ -142,10 +143,9 @@ Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
 **********************************************************************/
 template <class T>
 Queue<T> & Queue<T> :: operator =
-   (const Queue<T> & rhs) throw (const char *)
+(const Queue<T> & rhs) throw (const char *)
 {
-   // Check to see if we're self-assigning and quit the operation if we
-   // are
+   // Check to see if we're self-assigning and quit if we are
    if (this == &rhs)
       return *this;
 
@@ -174,10 +174,10 @@ Queue<T> & Queue<T> :: operator =
    }
 
    // And now we copy over the data
-   m_front = rhs.m_front;
-   m_back = rhs.m_back;
-   for (int i = m_front; i <= m_back; i++)
-      m_data[i] = rhs.m_data[i];
+   m_numPush = m_numPop = 0;
+
+   for (int i = rhs.m_numPop; i < rhs.m_numPush; i++)
+      push(rhs.m_data[i % rhs.m_capacity]);
 
    return *this;
 }
@@ -187,51 +187,38 @@ Queue<T> & Queue<T> :: operator =
 * Adds  a value to the back of the queue
 ****************************************************************/
 template <class T>
-void Queue <T> :: push(const T & value) throw (const char *)
+void Queue <T> ::push(const T & value) throw (const char *)
 {
-   // We need to handle the case where we haven't even
-   // created our queue, yet.
-   if (!m_capacity)
+   if (size() == capacity())
       resize();
-
-   // Now comes the work
-   int new_back = (m_back + 1) % m_capacity;
-
-   if (new_back == m_front) // We're full up, so we need to resize
-   {
-      resize();
-      m_data[m_back] = value;
-      m_back = (m_back + 1) % m_capacity;
-   }
-   else
-   {
-      m_data[m_back] = value;
-      m_back = new_back;
-   }
+   m_numPush++;
+   m_data[iTail()] = value;
 }
+
 /****************************************************************
 * QUEUE :: FRONT
 * Will check what value is at the front of the queue
 ****************************************************************/
 template <class T>
-T & Queue <T> :: front() const throw (const char*)
+T & Queue <T> ::front() const throw (const char*)
 {
    if (!empty())
-      return (m_data[m_front]);
+      return (m_data[iHead()]);
    else
    {
       throw "ERROR: attempting to access an item in an empty queue";
    }
 }
+
 /****************************************************************
 * QUEUE :: BACK
 * Will check what value is at the back of the queue
 ****************************************************************/
 template <class T>
-T & Queue <T> :: back() const throw (const char *)
+T & Queue <T> :: back() const throw (const char*)
 {
    if (!empty())
-      return (m_data[m_back]);
+      return (m_data[iTail()]);
    else
    {
       throw "ERROR: attempting to access an item in an empty queue";
@@ -247,7 +234,7 @@ void Queue <T> ::pop() throw (const char*)
 {
    // if queue is not empty, pop off first element
    if (!empty())
-      m_front = (m_front + 1) % m_capacity;
+      m_numPop++;
    else
       throw "ERROR: attempting to pop from an empty queue";
 }
@@ -260,17 +247,15 @@ template <class T>
 void Queue <T> ::resize() throw (const char *)
 {
    // Lets make sure we have an array and if we do not
-   // have an array, lets create one. We need to have
-   // at least two slots, so we can keep track of our 
-   // empty slot.
+   // have an array, lets create one. 
    if (!m_capacity)
    {
-      m_data = new (std::nothrow) T[2];
+      m_data = new (std::nothrow) T[1];
 
       if (NULL == m_data)
          throw "ERROR: Unable to allocate a new buffer for Queue";
 
-      m_capacity = 2;
+      m_capacity = 1;
       return;
    }
 
@@ -279,31 +264,23 @@ void Queue <T> ::resize() throw (const char *)
    if (new_data == NULL)
       throw "ERROR: Unable to allocate a new buffer for Queue";
 
-   // Then, we copy over our existing data - this is a bit of 
-   // a bugbear because of the circular nature of the source
-   // array.
-   int i = 0;
-   int cur = (m_front + i) % m_capacity;
+   T * old_data = m_data;
 
-   while (cur != m_back)
-   {
-      new_data[i] = m_data[cur];
-      i++;
-      cur = (m_front + i) % m_capacity;
-   }
-
-   m_capacity *= 2;
-   m_front = 0;
-   m_back = m_front + i;
-
-   // Delete our old buffer and swap in the new one
-   delete[] m_data;
    m_data = new_data;
+   int old_numPop = m_numPop;
+   int old_numPush = m_numPush;
+   int old_m_capacity = m_capacity;
+   m_capacity *= 2;
+   m_numPush = m_numPop = 0;
 
+   for (int i = old_numPop; i < old_numPush; i++)
+      push(old_data[i % old_m_capacity]);
+
+   delete[] old_data;
 }
 
 template <class T>
-void Queue <T> :: display(std::ostream & out) const
+void Queue <T> ::display(std::ostream & out) const
 {
    if (empty())
    {
