@@ -1,11 +1,12 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
+#include "dollars.h"
 
 class Transaction
 {
 public:
-   Transaction(int in_shareCount = 1, float in_sharePrice = 1.0);
+   Transaction(int in_shareCount = 1, Dollars in_sharePrice = 1.0);
 
    // Gets the count of remaining shares bought in this transaction; 
    // this can't be added to, but shares can be sold
@@ -13,7 +14,7 @@ public:
 
    // Get share price (share price can't be changed once set at creation time
    // only read
-   float getSharePrice() const { return m_sharePrice; }
+   Dollars getSharePrice() const { return m_sharePrice; }
 
    // Sells a subset of the shares, reducing the share count by the 
    // amount sold; returns the number of shares sold - in case
@@ -25,7 +26,7 @@ public:
 
 private:
    int m_shareCount;
-   float m_sharePrice;
+   Dollars m_sharePrice;
 };
 
 #endif // !TRANSACTION_H
