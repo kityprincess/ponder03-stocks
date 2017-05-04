@@ -11,8 +11,10 @@
 #include <iostream>    // for ISTREAM, OSTREAM, CIN, and COUT
 #include <string>      // for STRING
 #include <cassert>     // for ASSERT
+#include <sstream>     // for STRINGSTREAM
 #include "stock.h"     // for STOCK_TRANSACTION
-#include "queue.h"     // for QUEUE
+#include "portfolio.h" // for PORTFOLIO
+#include "dollars.h"   // for DOLLARS
 using namespace std;
 
 /************************************************
@@ -31,6 +33,45 @@ void stocksBuySell()
    cout << "  quit            - Display a final report and quit the program\n";
 
    // your code here...
+   Portfolio portfolio;
+
+   string line;
+   while (getline(cin, line))
+   {
+      // load the line into a stringstream
+      stringstream ss;
+      ss.str(line);
+
+      // declare variables
+      string option;
+      int shares;
+      Dollars price;
+
+      // read in the data
+      ss >> option >> shares >> price;
+
+      if (option == "buy")
+      {
+         portfolio.buy(shares, price);
+         portfolio.display(); // remove when function working
+      }
+      else if (option == "sell")
+      {
+         portfolio.sell(shares, price);
+         portfolio.display(); // for debugging (remove later)
+      }
+      else if (option == "display")
+      {
+
+      }
+      else if (option == "quit")
+      {
+         break;
+      }
+      else if (option != "")
+         cout << "Unrecognized command, try again.\n";
+   }
+
 }
 
 
