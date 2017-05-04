@@ -58,6 +58,8 @@ void stocksBuySell()
       else if (option == "sell")
       {
 
+         portfolio.sell(shares, price);
+         portfolio.display(); // for debugging (remove later)
       }
       else if (option == "display")
       {

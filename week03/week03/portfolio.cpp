@@ -35,6 +35,11 @@ void Portfolio::buy(int number, Dollars price)
 ************************************************************************/
 void Portfolio::sell(int number, Dollars price)
 {
+   if (number < m_transactions.front().getShareCount())
+   {
+      m_transactions.front().sellShares(number);
+   }
+   //m_transactions.pop();
 }
 
 /***********************************************************************
