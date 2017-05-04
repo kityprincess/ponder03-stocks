@@ -6,7 +6,7 @@
 * "Buys" a number of shares at a given price by creating a new Transaction
 * to represent the purchase
 ************************************************************************/
-Transaction::Transaction(int in_shareCount, float in_sharePrice)
+Transaction::Transaction(int in_shareCount, Dollars in_sharePrice)
    : m_shareCount(in_shareCount), m_sharePrice(in_sharePrice)
 {
 }
