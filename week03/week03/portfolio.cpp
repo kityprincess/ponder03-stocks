@@ -40,7 +40,6 @@ void Portfolio::sell(int number, Dollars price)
       m_transactions.front().sellShares(number);
    }
    //m_transactions.pop();
-   
 }
 
 /***********************************************************************

@@ -38,13 +38,13 @@
     <ClInclude Include="stock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="transaction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="portfolio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

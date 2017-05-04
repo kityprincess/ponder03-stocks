@@ -1,4 +1,4 @@
-//
+﻿//
 //  queue.h
 //  queue
 //
@@ -32,29 +32,31 @@ class Queue
 public:
 
    // Default constructor and non-default constructor
-   Queue(int in_capacity = 0) throw (const char *)
+   Queue(int in_capacity = 0) throw (const char *);
 
    // copy constructor
    Queue(const Queue<T> & source) throw (const char *);
 
    // destructor
-   ~Queue() { if (m_capacity > 0) // If this is true, we have an allocated buffer
-            delete[] m_data; }
+   ~Queue() {
+      if (m_capacity > 0) // If this is true, we have an allocated buffer
+         delete[] m_data;
+   }
 
    // assignment operator
    Queue<T> & operator = (const Queue<T> & rhs) throw (const char *);
 
    // check and see if empty
-   bool empty() const;
+   bool empty() const { return m_numPush == m_numPop; }
 
    // returns the size
-   int size() const;
+   int size() const { return m_numPush - m_numPop; }
 
    // gives us the capacity
-   int capacity() const;
+   int capacity() const { return m_capacity; }
 
    // will clear the board
-   void clear();
+   void clear() { m_numPush = m_numPop; }
 
    // add a value to the top
    void push(const T & value) throw (const char *);
@@ -63,31 +65,23 @@ public:
    void pop() throw (const char*);
 
    // gets the value from the front
-   T & front() const;
+   T & front() const throw (const char*);
 
-   // gets the value from the back
-   T & back() const throw (const char *);
+   // gets the value from the front
+   T & back() const throw (const char*);
 
-   // resize the capacity of queue
-   void resize() throw (const char *);
+   // displays the contents of the queue to an ostream
+   void display(std::ostream & out) const;
 
 private:
 
-   int m_capacity;                     // capacity of queue
-   T * m_data;                         // array to store element
-   int m_front;                        // front of queue
-   int m_back;                         // back of queue
-   void resize() throw (const char *); // resize the stack
-
-   class Transaction
-   {
-
-   };
-
-   class Portfolio
-   {
-
-   };
+   int m_capacity;                                       // capacity of queue
+   T * m_data;                                           // array to store element
+   int m_numPop;                                           // number of times a value has been popped
+   int m_numPush;                                          // number of times a value has been pushed
+   void resize() throw (const char *);                   // resize the stack
+   int iTail() const { return (m_numPush - 1) % m_capacity; }  // returns the back of the queue
+   int iHead() const { return m_numPop % m_capacity; }         // returns the front of the queue
 };
 
 /***********************************************************************
@@ -96,8 +90,8 @@ private:
 * we create a Queue with enough storage to hold that capacity
 ************************************************************************/
 template <class T>
-Queue<T> :: Queue(int in_capacity) throw (const char *)
-   : m_capacity(0), m_front(0), m_back(0), m_data(NULL)
+Queue<T> ::Queue(int in_capacity) throw (const char *)
+   : m_capacity(0), m_numPush(0), m_numPop(0), m_data(NULL)
 {
    assert(in_capacity >= 0);
    // First, assure the user specified a valid capacity; if capacity
@@ -107,7 +101,7 @@ Queue<T> :: Queue(int in_capacity) throw (const char *)
       return;
 
    // If we've reached this point, we have an input capacity > 0
-   // so we'll try allocating our array
+   // so we'll try allocating our array.
    m_capacity = in_capacity;
    m_data = new (std::nothrow) T[m_capacity];
 
@@ -122,8 +116,8 @@ Queue<T> :: Queue(int in_capacity) throw (const char *)
 * Creates a new Queue by copying the contents of another
 **********************************************************************/
 template <class T>
-Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
-   : m_capacity(source.m_capacity), m_front(source.m_front), m_back(source.m_back)
+Queue<T> ::Queue(const Queue<T> & source) throw (const char *)
+   : m_capacity(source.m_capacity), m_numPush(source.m_numPush), m_numPop(source.m_numPop)
 {
 
    // Now we try to allocate our array
@@ -133,11 +127,14 @@ Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
    if (NULL == m_data)
       throw "ERROR: Unable to allocate a new buffer for Queue";
 
+   // If the source is empty, we shouldn't try to copy anything
+   if (source.empty())
+      return;
+
    // If we reach this point, we've successfully allocated
    // our buffer, so let's copy the data
-   for (int i = m_front; i <= m_back; i++)
-      m_data[i] = source.m_data[i];
-
+   for (int i = source.m_numPop; i < source.m_numPush; i++)
+      m_data[i % m_capacity] = source.m_data[i % source.m_capacity];
 }
 
 /**********************************************************************
@@ -146,10 +143,9 @@ Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
 **********************************************************************/
 template <class T>
 Queue<T> & Queue<T> :: operator =
-   (const Queue<T> & rhs) throw (const char *)
+(const Queue<T> & rhs) throw (const char *)
 {
-   // Check to see if we're self-assigning and quit the operation if we
-   // are
+   // Check to see if we're self-assigning and quit if we are
    if (this == &rhs)
       return *this;
 
@@ -178,12 +174,40 @@ Queue<T> & Queue<T> :: operator =
    }
 
    // And now we copy over the data
-   m_front = rhs.m_front;
-   m_back = rhs.m_back;
-   for (int i = m_front; i <= m_back; i++)
-      m_data[i] = rhs.m_data[i];
+   m_numPush = m_numPop = 0;
+
+   for (int i = rhs.m_numPop; i < rhs.m_numPush; i++)
+      push(rhs.m_data[i % rhs.m_capacity]);
 
    return *this;
+}
+
+/****************************************************************
+* QUEUE :: PUSH
+* Adds  a value to the back of the queue
+****************************************************************/
+template <class T>
+void Queue <T> ::push(const T & value) throw (const char *)
+{
+   if (size() == capacity())
+      resize();
+   m_numPush++;
+   m_data[iTail()] = value;
+}
+
+/****************************************************************
+* QUEUE :: FRONT
+* Will check what value is at the front of the queue
+****************************************************************/
+template <class T>
+T & Queue <T> ::front() const throw (const char*)
+{
+   if (!empty())
+      return (m_data[iHead()]);
+   else
+   {
+      throw "ERROR: attempting to access an item in an empty queue";
+   }
 }
 
 /****************************************************************
@@ -191,14 +215,69 @@ Queue<T> & Queue<T> :: operator =
 * Will check what value is at the back of the queue
 ****************************************************************/
 template <class T>
-T & Queue <T> :: back() const throw (const char *)
+T & Queue <T> :: back() const throw (const char*)
 {
    if (!empty())
-      return (m_data[m_back]);
+      return (m_data[iTail()]);
    else
    {
       throw "ERROR: attempting to access an item in an empty queue";
    }
+}
+
+/**********************************************************
+* QUEUE :: POP
+* Pulls off an item from the front
+*********************************************************/
+template <class T>
+void Queue <T> ::pop() throw (const char*)
+{
+   // if queue is not empty, pop off first element
+   if (!empty())
+      m_numPop++;
+   else
+      throw "ERROR: attempting to pop from an empty queue";
+}
+
+/**********************************************************
+* QUEUE :: RESIZE
+* Resizes the Queue
+*********************************************************/
+template <class T>
+void Queue <T> ::resize() throw (const char *)
+{
+   // Lets make sure we have an array and if we do not
+   // have an array, lets create one. 
+   if (!m_capacity)
+   {
+      m_data = new (std::nothrow) T[1];
+
+      if (NULL == m_data)
+         throw "ERROR: Unable to allocate a new buffer for Queue";
+
+      m_capacity = 1;
+      return;
+   }
+
+   // From here we have a full Queue and we will size it accordingly
+   T * new_data = new (std::nothrow) T[m_capacity * 2];
+   if (new_data == NULL)
+      throw "ERROR: Unable to allocate a new buffer for Queue";
+
+   T * old_data = m_data;
+
+   m_data = new_data;
+   int old_numPop = m_numPop;
+   int old_numPush = m_numPush;
+   int old_m_capacity = m_capacity;
+   m_capacity *= 2;
+   m_numPush = m_numPop = 0;
+
+   for (int i = old_numPop; i < old_numPush; i++)
+      push(old_data[i % old_m_capacity]);
+
+
+   delete[] old_data;
 }
 
 #endif /* Queue_h */
