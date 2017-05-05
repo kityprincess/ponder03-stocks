@@ -4,7 +4,7 @@
 #     Brother JonesL, CS235
 # Author:
 #     Bryan Lopez - hours
-#	  Kimberly Stowe - 4 hours
+#	  Kimberly Stowe - 5 hours
 #	  Matthew Burr - hours
 #	  Shayla Nelson - hours
 #	  Discussion - 3 hours 
