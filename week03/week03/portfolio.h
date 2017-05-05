@@ -4,6 +4,7 @@
 #include "queue.h"
 #include "transaction.h"
 #include "dollars.h"
+#include <iostream>
 
 class Portfolio
 {
@@ -12,12 +13,13 @@ public:
    ~Portfolio();
    void buy(int number, Dollars price);
    void sell(int number, Dollars price);
-   void display();
+   void display(std::ostream & out) const;
 
 private:
-   Queue<Transaction> m_transactions;
-   Queue<Transaction> m_history;
-   Dollars proceeds;
+   Queue<Transaction> m_holdings;
+   Queue<Transaction> m_saleHistory;
+   Dollars m_proceeds;
 };
 
+std::ostream & operator << (std::ostream & out, const Portfolio & rhs);
 #endif

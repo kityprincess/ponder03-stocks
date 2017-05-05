@@ -34,7 +34,8 @@ void stocksBuySell()
 
    // your code here...
    Portfolio portfolio;
-
+   cout << "> ";
+   cin.ignore();
    string line;
    while (getline(cin, line))
    {
@@ -48,22 +49,21 @@ void stocksBuySell()
       Dollars price;
 
       // read in the data
-      ss >> option >> shares >> price;
+      ss >> option; // >> shares >> price;
 
       if (option == "buy")
       {
+         ss >> shares >> price;
          portfolio.buy(shares, price);
-         portfolio.display(); // remove when function working
       }
       else if (option == "sell")
       {
-
+         ss >> shares >> price;
          portfolio.sell(shares, price);
-         portfolio.display(); // for debugging (remove later)
       }
       else if (option == "display")
       {
-
+         cout << portfolio;
       }
       else if (option == "quit")
       {
@@ -71,7 +71,11 @@ void stocksBuySell()
       }
       else if (option != "")
          cout << "Unrecognized command, try again.\n";
+
+      
+      cout << "> ";
    }
+   
 
 }
 

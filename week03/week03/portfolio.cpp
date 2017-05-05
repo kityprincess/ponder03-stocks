@@ -7,7 +7,7 @@ using namespace std;
 * Creates a new Queue to keep track of the buy/sell transactions
 ************************************************************************/
 Portfolio::Portfolio()
-    : proceeds(0)
+    : m_proceeds(0)
 {
 }
 
@@ -26,7 +26,7 @@ Portfolio::~Portfolio()
 void Portfolio::buy(int number, Dollars price)
 {
     Transaction t = Transaction(number, price);
-    m_transactions.push(t);
+    m_holdings.push(t);
 }
 
 /***********************************************************************
@@ -35,26 +35,57 @@ void Portfolio::buy(int number, Dollars price)
 ************************************************************************/
 void Portfolio::sell(int number, Dollars price)
 {
-   if (number < m_transactions.front().getShareCount())
+   while (number > 0 && !m_holdings.empty())
    {
-      m_transactions.front().sellShares(number);
+      Transaction sale = m_holdings.front().sellShares(number, price);
+      number -= sale.getShareCount();
+      m_proceeds += sale.getProfit();
+      m_saleHistory.push(sale);
+
+      if (m_holdings.front().getShareCount() == 0)
+         m_holdings.pop();
    }
-   //m_transactions.pop();
 }
 
 /***********************************************************************
 * PORTFOLIO :: DISPLAY
-* 
+* Displays the portfolio
 ************************************************************************/
-void Portfolio::display()
+void Portfolio::display(ostream & out) const
 {
-   // TODO: make this according to spec
-   Queue <Transaction> q = m_transactions;
-   cout << "{ ";
-   while (!q.empty())
+   if (!m_holdings.empty())
    {
-      cout << "(" << q.front().getShareCount() << ' ' << q.front().getSharePrice() << ") ";
-      q.pop();
+      out << "Currently held:\n";
+      Queue <Transaction> q = m_holdings;
+
+      while (!q.empty())
+      {
+         out << q.front();
+         q.pop();
+      }
    }
-   cout << '}';
+
+   if (!m_saleHistory.empty())
+   {
+      out << "Sell History:\n";
+      Queue<Transaction> s = m_saleHistory;
+
+      while (!s.empty())
+      {
+         out << s.front();
+         s.pop();
+      }
+      
+   }
+   out << "Proceeds: " << m_proceeds << endl;
+}
+
+/***********************************************************************
+* PORTFOLIO INSERTION OPERATOR
+* Displays the portfolio
+************************************************************************/
+ostream & operator << (ostream & out, const Portfolio & rhs)
+{
+   rhs.display(out);
+   return out;
 }
