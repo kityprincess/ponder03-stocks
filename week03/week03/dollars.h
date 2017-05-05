@@ -10,7 +10,7 @@
 #ifndef DOLLARS_H
 #define DOLLARS_H
 
-#include <iostream>  // for OSTREAM and ISTREAM
+#include <iostream>  // for ISTREAM, OSTREAM, CIN, and COUT
 
 /******************************************
  * DOLLARS

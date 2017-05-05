@@ -2,21 +2,20 @@
  * Header:
  *    STOCK
  * Summary:
- *    This will contain just the prototype for stocksBuySell(). You may
- *    want to put other class definitions here as well.
+ *    This will contain just the prototype for stocksBuySell().
  * Author
- *    <your names here>
+ *    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
  ************************************************************************/
 
 #ifndef STOCK_H
 #define STOCK_H
 
-#include "dollars.h"   // for Dollars defined in StockTransaction
+#include "dollars.h"   // for DOLLARS defined in StockTransaction
 #include "queue.h"     // for QUEUE
-#include <iostream>    // for ISTREAM and OSTREAM
+#include "portfolio.h" // for PORTFOLIO
+#include <iostream>    // for ISTREAM, OSTREAM, CIN, and COUT
 
 
-//testing upload - DELETE
 // the interactive stock buy/sell function
 void stocksBuySell();
 

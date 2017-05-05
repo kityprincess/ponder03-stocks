@@ -1,10 +1,18 @@
+/***********************************************************************
+* Header:
+*    Portfolio
+* Summary:
+*    This class contains the data about a customers portfolio.
+* Authors:
+*    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
+************************************************************************/
 #ifndef PORTFOLIO_H
 #define PORTFOLIO_H
 
-#include "queue.h"
-#include "transaction.h"
-#include "dollars.h"
-#include <iostream>
+#include "queue.h"         // for QUEUE
+#include "transaction.h"   // for TRANSACTIONS
+#include "dollars.h"       // for DOLLARS defined in StockTransaction
+#include <iostream>        // for ISTREAM, OSTREAM, CIN, and COUT
 
 class Portfolio
 {

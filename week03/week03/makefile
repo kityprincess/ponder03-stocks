@@ -1,13 +1,18 @@
 ###############################################################
 # Program:
 #     Week 03, QUEUE
-#     Brother XXXX, CS235
+#     Brother JonesL, CS235
 # Author:
-#     <your name here>
+#     Bryan Lopez - hours
+#	  Kimberly Stowe - 4 hours
+#	  Matthew Burr - hours
+#	  Shayla Nelson - hours
+#	  Discussion - 3 hours 
 # Summary:
-#     <put a description here>
+#     The files compiled in this make file allow stocks to 
+#		to be purchased and sold utilizing queues. 
 # Time:
-#     <how long did it take to complete this program>?
+#     It took our team 
 ###############################################################
 
 ##############################################################

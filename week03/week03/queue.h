@@ -1,26 +1,17 @@
-﻿//
-//  queue.h
-//  queue
-//
-//  Created by Bryan Lopez on 4/29/17.
-//  Copyright � 2017 Lopez Bryan. All rights reserved.
-//
-/***********************************************************************
+﻿/***********************************************************************
 * Header:
 *    Queue
 * Summary:
 *    This class contains the notion of a queue.
-*
-*    This will contain the class definition of Queue
-* Authors
+* Authors:
 *    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
 ************************************************************************/
 #ifndef Queue_h
 #define Queue_h
 
-#include <iostream>
-#include <new>
-#include <cassert>
+#include <iostream>     // for ISTREAM, OSTREAM, CIN, and COUT
+#include <new>          // for NEW and DELETE
+#include <cassert>      // for ASSERT
 
 /*****************************************
 * Queue
@@ -90,7 +81,7 @@ private:
 * we create a Queue with enough storage to hold that capacity
 ************************************************************************/
 template <class T>
-Queue<T> ::Queue(int in_capacity) throw (const char *)
+Queue<T> :: Queue(int in_capacity) throw (const char *)
    : m_capacity(0), m_numPush(0), m_numPop(0), m_data(NULL)
 {
    assert(in_capacity >= 0);
@@ -116,7 +107,7 @@ Queue<T> ::Queue(int in_capacity) throw (const char *)
 * Creates a new Queue by copying the contents of another
 **********************************************************************/
 template <class T>
-Queue<T> ::Queue(const Queue<T> & source) throw (const char *)
+Queue<T> :: Queue(const Queue<T> & source) throw (const char *)
    : m_capacity(source.m_capacity), m_numPush(source.m_numPush), m_numPop(source.m_numPop)
 {
 
@@ -187,7 +178,7 @@ Queue<T> & Queue<T> :: operator =
 * Adds  a value to the back of the queue
 ****************************************************************/
 template <class T>
-void Queue <T> ::push(const T & value) throw (const char *)
+void Queue <T> :: push(const T & value) throw (const char *)
 {
    if (size() == capacity())
       resize();
@@ -200,7 +191,7 @@ void Queue <T> ::push(const T & value) throw (const char *)
 * Will check what value is at the front of the queue
 ****************************************************************/
 template <class T>
-T & Queue <T> ::front() const throw (const char*)
+T & Queue <T> :: front() const throw (const char*)
 {
    if (!empty())
       return (m_data[iHead()]);
@@ -230,7 +221,7 @@ T & Queue <T> :: back() const throw (const char*)
 * Pulls off an item from the front
 *********************************************************/
 template <class T>
-void Queue <T> ::pop() throw (const char*)
+void Queue <T> :: pop() throw (const char*)
 {
    // if queue is not empty, pop off first element
    if (!empty())
@@ -244,7 +235,7 @@ void Queue <T> ::pop() throw (const char*)
 * Resizes the Queue
 *********************************************************/
 template <class T>
-void Queue <T> ::resize() throw (const char *)
+void Queue <T> :: resize() throw (const char *)
 {
    // Lets make sure we have an array and if we do not
    // have an array, lets create one. 
