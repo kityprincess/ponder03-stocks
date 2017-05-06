@@ -5,7 +5,7 @@
 # Author:
 #     Bryan Lopez - hours
 #	  Kimberly Stowe - 5 hours
-#	  Matthew Burr - hours
+#	  Matthew Burr - 6 hours
 #	  Shayla Nelson - hours
 #	  Discussion - 3 hours 
 # Summary:
