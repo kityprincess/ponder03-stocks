@@ -6,7 +6,7 @@
 #     Bryan Lopez - hours
 #	  Kimberly Stowe - 5 hours
 #	  Matthew Burr - 6 hours
-#	  Shayla Nelson - hours
+#	  Shayla Nelson - 7 hours
 #	  Discussion - 3 hours 
 # Summary:
 #     The files compiled in this make file allow stocks to 
