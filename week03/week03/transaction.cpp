@@ -1,6 +1,14 @@
-#include "transaction.h"
-#include <cassert>
-#include <iostream>
+/***********************************************************************
+* Program:
+*    Transaction
+* Summary:
+*    This class contains the implementation of transactions.
+* Authors:
+*    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
+************************************************************************/
+#include "transaction.h"   // for the class definition
+#include <cassert>         // for ASSERT
+#include <iostream>        // for ISTREAM, OSTREAM, CIN, and COUT
 using namespace std;
 
 /***********************************************************************
@@ -8,7 +16,7 @@ using namespace std;
 * "Buys" a number of shares at a given price by creating a new Transaction
 * to represent the purchase
 ************************************************************************/
-Transaction::Transaction(int in_shareCount, Dollars in_sharePrice,
+Transaction :: Transaction(int in_shareCount, Dollars in_sharePrice,
    Dollars in_soldPrice)
    : m_shareCount(in_shareCount), m_buyPrice(in_sharePrice),
    m_soldPrice(in_soldPrice), m_sold(false)
@@ -21,7 +29,7 @@ Transaction::Transaction(int in_shareCount, Dollars in_sharePrice,
 * TRANSACTION :: SELLSHARES
 * Sells a number of shares, reducing the transaction by that amount
 ************************************************************************/
-Transaction Transaction::sellShares(int in_sellCount, Dollars in_salePrice)
+Transaction Transaction :: sellShares(int in_sellCount, Dollars in_salePrice)
 {
    assert(in_sellCount >= 0);
    if (in_sellCount < 0)
@@ -49,7 +57,7 @@ Transaction Transaction::sellShares(int in_sellCount, Dollars in_salePrice)
 * TRANSACTION :: GETPROFIT
 * If this was a sale, gets the profit, else gets 0
 ************************************************************************/
-Dollars Transaction::getProfit() const
+Dollars Transaction :: getProfit() const
 {
    if (m_sold)
       return (m_soldPrice - m_buyPrice) * m_shareCount;
@@ -62,7 +70,7 @@ Dollars Transaction::getProfit() const
 * Displays the transaction as appropriate depending on whether it is
 * a sale or not
 ************************************************************************/
-void Transaction::display(ostream & out) const
+void Transaction :: display(ostream & out) const
 {
    if (m_sold)
    {

@@ -1,8 +1,16 @@
+/***********************************************************************
+* Header:
+*    Transaction
+* Summary:
+*    This class contains the implementation of transactions.
+* Authors:
+*    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
+************************************************************************/
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
-#include "dollars.h"
-#include <iostream>
+#include "dollars.h"       // for DOLLARS defined in StockTransaction
+#include <iostream>        // for ISTREAM, OSTREAM, CIN, and COUT
 
 class Transaction
 {
@@ -14,7 +22,7 @@ public:
    // this can't be added to, but shares can be sold
    int getShareCount() const { return m_shareCount; }
 
-   // Get share price (share price can't be changed once set at creation time
+   // Get share price (share price can't be changed once set at creation time)
    // only read
    Dollars getSharePrice() const { return m_buyPrice; }
 
@@ -34,10 +42,10 @@ public:
    void display(std::ostream & out) const;
 
 private:
-   int m_shareCount;
-   bool m_sold;
-   Dollars m_buyPrice;
-   Dollars m_soldPrice;
+   int m_shareCount;       // number of shares
+   bool m_sold;            // returns true of shares have been sold
+   Dollars m_buyPrice;     // price shares were purchased at
+   Dollars m_soldPrice;    // price shares were sold at
 };
 
 std::ostream & operator << (std::ostream & out, const Transaction & rhs);

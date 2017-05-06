@@ -1,29 +1,37 @@
-#include "portfolio.h"
-#include <iostream>    // for CIN and COUT
+/***********************************************************************
+* Program:
+*    Portfolio
+* Summary:
+*    This class contains the data about a customers portfolio.
+* Authors:
+*    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
+************************************************************************/
+#include "portfolio.h"  // for the class definition
+#include <iostream>     // for ISTREAM, OSTREAM, CIN, and COUT
 using namespace std;
 
 /***********************************************************************
 * PORTFOLIO :: CONSTRUCTOR
 * Creates a new Queue to keep track of the buy/sell transactions
 ************************************************************************/
-Portfolio::Portfolio()
+Portfolio :: Portfolio()
     : m_proceeds(0)
 {
 }
 
 /***********************************************************************
 * PORTFOLIO :: DESTRUCTOR
-* Destructs the portfolio
+* Destructs the portfolio.
 ************************************************************************/
-Portfolio::~Portfolio()
+Portfolio :: ~Portfolio()
 {
 }
 
 /***********************************************************************
 * PORTFOLIO :: BUY
-* 
+* Buys stock and puts it in the portfolio.
 ************************************************************************/
-void Portfolio::buy(int number, Dollars price)
+void Portfolio :: buy(int number, Dollars price)
 {
     Transaction t = Transaction(number, price);
     m_holdings.push(t);
@@ -31,9 +39,9 @@ void Portfolio::buy(int number, Dollars price)
 
 /***********************************************************************
 * PORTFOLIO :: SELL
-* 
+* Sells stocks and updates the portfolio accordingly. 
 ************************************************************************/
-void Portfolio::sell(int number, Dollars price)
+void Portfolio :: sell(int number, Dollars price)
 {
    while (number > 0 && !m_holdings.empty())
    {
@@ -51,7 +59,7 @@ void Portfolio::sell(int number, Dollars price)
 * PORTFOLIO :: DISPLAY
 * Displays the portfolio
 ************************************************************************/
-void Portfolio::display(ostream & out) const
+void Portfolio :: display(ostream & out) const
 {
    if (!m_holdings.empty())
    {
@@ -82,7 +90,7 @@ void Portfolio::display(ostream & out) const
 
 /***********************************************************************
 * PORTFOLIO INSERTION OPERATOR
-* Displays the portfolio
+* Allows data to be outputted to the screen without the std library.
 ************************************************************************/
 ostream & operator << (ostream & out, const Portfolio & rhs)
 {

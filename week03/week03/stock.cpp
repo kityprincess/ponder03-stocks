@@ -1,20 +1,19 @@
 /***********************************************************************
- * Implementation:
+ * Program:
  *    STOCK
  * Summary:
  *    This will contain the implementation for stocksBuySell() as well
  *    as any other function or class implementation you need
  * Author
- *    <your names here>
+ *    Bryan Lopez, Kimberly Stowe, Matthew Burr & Shayla Nelson
  **********************************************************************/
 
 #include <iostream>    // for ISTREAM, OSTREAM, CIN, and COUT
 #include <string>      // for STRING
 #include <cassert>     // for ASSERT
 #include <sstream>     // for STRINGSTREAM
-#include "stock.h"     // for STOCK_TRANSACTION
-#include "portfolio.h" // for PORTFOLIO
-#include "dollars.h"   // for DOLLARS
+#include "stock.h"     // for class definition
+
 using namespace std;
 
 /************************************************
@@ -75,8 +74,6 @@ void stocksBuySell()
       
       cout << "> ";
    }
-   
-
 }
 
 

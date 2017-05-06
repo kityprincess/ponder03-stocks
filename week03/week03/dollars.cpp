@@ -7,7 +7,7 @@
  *    Br. Helfrich
  ************************************************************************/
 
-#include <iostream>  // for OSTREAM and ISTREAM
+#include <iostream>  // for ISTREAM, OSTREAM, CIN, and COUT
 #include <cassert>   // for ASSERT
 #include "dollars.h" // for the class definition
 using namespace std;
